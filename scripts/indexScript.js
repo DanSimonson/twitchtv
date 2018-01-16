@@ -26,13 +26,14 @@ $(document).ready(function () {
                 }    
             });
         });
-
+       
+        //call function to process and render page with error free data
         check(channels);            
     };
         
 
 
-    function check(channels){
+    function check(channels){        
         
         //console.log seems to reset array to eliminate removed elements of "undefined". Not sure why or how :>)
         console.log(channels)
@@ -42,11 +43,22 @@ $(document).ready(function () {
             $.getJSON('https://wind-bow.glitch.me/twitch-api/'+type[0]+'/'+channels[index]+'/?callback=?', function(data) {
                 
                 if(data.stream !== null) {
+                    $('#followers').prepend("<div class = 'row'>" + "<div class = 'col-md-4'>"
+                    + "<img src=" + data.stream.channel.logo + ">"
+                    + "</div>" + "<div class='col-md-4'>" + data.stream.channel.display_name + "</div>" + "<div class='col-md-4'>" 
+                    + data.stream.channel.status + "</div>");
+                    //$div.append('<h4 class="name"><a href="https://www.twitch.tv/' +el.name+ ' " target="_blank">'
+                    //+el.name+'</a></h4><p class="online"><i class="' 
+                    //+ online+'"></i></p>');
                     console.log(data.stream.channel.display_name);
                     console.log(data.stream.channel.status);
                     console.log(data.stream.channel.logo);
                 }else {
-                    $.getJSON('https://wind-bow.glitch.me/twitch-api/'+type[1]+'/'+channels[index]+'/?callback=?', function(data){        
+                    $.getJSON('https://wind-bow.glitch.me/twitch-api/'+type[1]+'/'+channels[index]+'/?callback=?', function(data){
+                        $('#followers').prepend("<div class = 'row'>" + "<div class = 'col-md-4'>"
+                        + "<img src='" + data.logo + "'>" + "</div>" + "<div class='col-md-4'>" 
+                        + data.display_name + "</div>" 
+                        + "<div class='col-md-4'>" + "status: OFFLINE" + "</div>");       
                         console.log(data.display_name)
                         console.log('status: offline');
                         console.log(data.logo);
