@@ -2,7 +2,7 @@
 $(document).ready(function () { 
     
     function status(){
-       let url = 'https://wind-bow.glitch.me/twitch-api/streams/freecodecamp';
+       var url = 'https://wind-bow.glitch.me/twitch-api/streams/freecodecamp/?callback=?';
        $.getJSON(url, function(data){
            if(data.stream === null) {
             $('#fcc-status').html('Free Code Camp is OFFLINE');
@@ -10,6 +10,7 @@ $(document).ready(function () {
                $('#fcc-status').html('Free Code Camp is ONLINE');
            }
         });
+        
     }
 
     function handleError(){
@@ -43,9 +44,12 @@ $(document).ready(function () {
             $.getJSON('https://wind-bow.glitch.me/twitch-api/'+type[0]+'/'+channels[index]+'/?callback=?', function(data) {
                 
                 if(data.stream !== null) {
-                    $('#followers').prepend("<div class = 'row'>" + "<div class = 'col-md-4'>"
+
+                    $('#on-followers').prepend("<div class = 'row'>" + "<div class = 'col-md-4'>"
                     + "<img src=" + data.stream.channel.logo + ">"
-                    + "</div>" + "<div class='col-md-4'>" + data.stream.channel.display_name + "</div>" + "<div class='col-md-4'>" 
+                    + "</div>" + "<div class='col-md-4'>" +"<a href='https://www.twitch.tv/" + data.stream.channel.display_name + "'" +
+                    "</a>" 
+                    + data.stream.channel.display_name + "</div>" + "<div class='col-md-4'>" 
                     + data.stream.channel.status + "</div>");
                     //$div.append('<h4 class="name"><a href="https://www.twitch.tv/' +el.name+ ' " target="_blank">'
                     //+el.name+'</a></h4><p class="online"><i class="' 
@@ -55,12 +59,13 @@ $(document).ready(function () {
                     console.log(data.stream.channel.logo);
                 }else {
                     $.getJSON('https://wind-bow.glitch.me/twitch-api/'+type[1]+'/'+channels[index]+'/?callback=?', function(data){
-                        $('#followers').prepend("<div class = 'row'>" + "<div class = 'col-md-4'>"
-                        + "<img src='" + data.logo + "'>" + "</div>" + "<div class='col-md-4'>" 
-                        + data.display_name + "</div>" 
-                        + "<div class='col-md-4'>" + "status: OFFLINE" + "</div>");       
+                        $('#off-followers').prepend("<div class = 'row'>" + "<div class = 'col-md-4'>"
+                        + "<img src='" + data.logo + "'>" + "</div>"+"<div class='col-md-4'>"
+                        + "<a href='https://www.twitch.tv/" + data.display_name + "'" +
+                        "</a>" + data.display_name + "</div>"
+                        + "<div class='col-md-4'>" + "LINK OPEN / STATUS OFFLINE" + "</div>");       
                         console.log(data.display_name)
-                        console.log('status: offline');
+                        console.log('LINK OPEN / STATUS OFFLINE');
                         console.log(data.logo);
                     }); //end getjson
                 }
@@ -70,6 +75,31 @@ $(document).ready(function () {
     //call methods to process data and render page
     status();
     handleError();
+
+    //button clicks
+    $(".all").click(function() {
+        $("#on-followers").show()
+        $("#off-followers").show();
+        $(".all > div").css("background-color", "#5C5457")
+        $(".offline-btn > div").css("background-color", "#B8CCA6");
+        $(".online-btn > div").css("background-color", "#B8CCA6");        
+
+    });
+    $(".online-btn").click(function(){
+        $("#on-followers").show()
+        $("#off-followers").hide();
+        $(".online-btn > div").css("background-color", "#5C5457");
+        $(".offline-btn > div").css("background-color", "#B8CCA6");
+        $(".all > div").css("background-color", "#B8CCA6");
+    });
+    $(".offline-btn").click(function(){
+        $("#on-followers").hide()
+        $("#off-followers").show();
+        $(".offline-btn > div").css("background-color", "#5C5457");
+        $(".online-btn > div").css("background-color", "#B8CCA6");        
+        $(".all > div").css("background-color", "#B8CCA6");
+    });
+
 }); //end document
 
 
